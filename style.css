@@ -1,0 +1,99 @@
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #fffdd0;
+}
+
+.top-bar {
+  background-color: #333;
+  color: white;
+  padding: 0.5em;
+  text-align: center;
+  position: relative;
+  border-bottom: 5px solid #e65c2f;
+}
+
+.datetime {
+  position: absolute;
+  right: 1em;
+  top: 0.5em;
+  background: #e65c2f;
+  padding: 0.5em;
+  font-size: 0.9em;
+}
+
+.login-box {
+  margin: 5em auto;
+  text-align: center;
+}
+
+.scan-label {
+  display: inline-block;
+  background: #ccc;
+  padding: 1em;
+  font-weight: bold;
+  margin-right: 0.5em;
+}
+
+input[type="text"] {
+  width: 300px;
+  padding: 1em;
+  font-size: 1em;
+}
+
+.manual-btn {
+  margin-top: 1em;
+  display: block;
+  font-size: 1em;
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+}
+
+.lang {
+  margin-top: 2em;
+}
+
+.lang img {
+  width: 60px;
+  cursor: pointer;
+  margin: 0 1em;
+}
+
+.person-count {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 2em;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.keyboard .keys {
+  margin-top: 1em;
+}
+
+.key {
+  display: inline-block;
+  margin: 0.2em;
+  padding: 0.5em 1em;
+  background: #ccc;
+  cursor: pointer;
+  font-size: 1em;
+  border-radius: 4px;
+}
