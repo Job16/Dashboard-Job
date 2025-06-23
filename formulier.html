@@ -1,0 +1,210 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Storing-registratieformulier</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 2em;
+    }
+    .form-container {
+      background: white;
+      padding: 2em;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+      font-weight: bold;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 0.75em;
+      margin-top: 0.5em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #2d2de4;
+      color: white;
+      font-weight: bold;
+      margin-top: 1.5em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2 id="titel">Storing-registratieformulier</h2>
+    <form id="storingsForm" enctype="multipart/form-data">
+      <label id="label_datetime">Datum & tijd:
+        <input type="text" id="datetime" readonly />
+      </label>
+
+      <label id="label_installatie">Installatie:
+        <select id="installatie" required>
+          <option value="">-- Kies installatie --</option>
+          <option>Carrousel 1</option>
+          <option>Carrousel R&R</option>
+          <option>Carrousel 2</option>
+          <option>Carrousel 3</option>
+          <option>Carrousel 4</option>
+          <option>Carrousel 5</option>
+          <option>Carrousel 6</option>
+          <option>Carrousel 7</option>
+          <option>Carrousel 8</option>
+          <option>Carrousel 9</option>
+          <option>Carrousel 10</option>
+        </select>
+      </label>
+
+      <label id="label_hoofd">Hoofdgereedschap:
+        <select id="hoofdgereedschap" onchange="updateSubcomponent()" required>
+          <option value="">-- Kies hoofdgereedschap --</option>
+          <option value="Carrousel">Carrousel</option>
+          <option value="Pick & Place">Pick & Place</option>
+          <option value="Oven">Oven</option>
+        </select>
+      </label>
+
+      <label id="label_onderdeel">Onderdeel:
+        <select id="subcomponent" required>
+          <option value="">-- Kies onderdeel --</option>
+        </select>
+      </label>
+
+      <label>Type storing:
+        <select id="typeStoring" required>
+          <option value="">-- Kies type storing --</option>
+          <option>Mechanisch</option>
+          <option>Elektrisch</option>
+          <option>Pneumatisch</option>
+          <option>Software</option>
+          <option>Sensorisch</option>
+          <option>Anders</option>
+        </select>
+      </label>
+
+      <label>Omschrijving storing:
+        <textarea id="omschrijving" rows="4" required></textarea>
+      </label>
+
+      <label>Actie tot nu toe:
+        <select id="actie" required>
+          <option value="">-- Kies actie --</option>
+          <option>Geen actie, direct TD nodig</option>
+          <option>Tijdelijke fix toegepast</option>
+          <option>Gemeld bij chef/teamleider</option>
+          <option>Opgelost door monteur</option>
+        </select>
+      </label>
+
+      <label>Naam monteur:
+        <input type="text" id="monteurNaam" required />
+      </label>
+
+      <label>Spoed?:
+        <select id="spoed" required>
+          <option value="">-- Selecteer --</option>
+          <option>Ja</option>
+          <option>Nee</option>
+        </select>
+      </label>
+
+      <label>Foto van storing (optioneel):
+        <input type="file" id="foto" accept="image/*" />
+      </label>
+
+      <button type="button" id="verzendBtn" onclick="verzendMelding()">Melding verzenden</button>
+    </form>
+  </div>
+
+  <script>
+    const now = new Date();
+    const formatted = now.toLocaleDateString('nl-NL') + ' ' + now.toLocaleTimeString('nl-NL');
+    document.getElementById("datetime").value = formatted;
+
+    const opties = {
+      "Carrousel": ["Armen", "Wagens", "Vorm", "Kettingen", "Lagers", "Ventilatiesysteem", "Bedrading", "Gasleiding", "Schakelkast", "Luchtsysteem"],
+      "Pick & Place": ["Takel", "Kartwagen", "Elektrische schakelkast"],
+      "Oven": ["Deur", "Venturi", "Brander", "V-Snaren", "Luchtsysteem"]
+    };
+
+    function updateSubcomponent() {
+      const hoofd = document.getElementById("hoofdgereedschap").value;
+      const sub = document.getElementById("subcomponent");
+      sub.innerHTML = '<option value="">-- Kies onderdeel --</option>';
+      if (opties[hoofd]) {
+        opties[hoofd].forEach(optie => {
+          const option = document.createElement("option");
+          option.textContent = optie;
+          sub.appendChild(option);
+        });
+      }
+    }
+
+    function verzendMelding() {
+      const fotoInput = document.getElementById("foto");
+      const formData = new FormData();
+      formData.append("Datum & tijd", document.getElementById("datetime").value);
+      formData.append("Installatie", document.getElementById("installatie").value);
+      formData.append("Hoofdgereedschap", document.getElementById("hoofdgereedschap").value);
+      formData.append("Onderdeel", document.getElementById("subcomponent").value);
+      formData.append("Type storing", document.getElementById("typeStoring").value);
+      formData.append("Omschrijving", document.getElementById("omschrijving").value);
+      formData.append("Actie", document.getElementById("actie").value);
+      formData.append("Monteur", document.getElementById("monteurNaam").value);
+      formData.append("Spoed", document.getElementById("spoed").value);
+      if (fotoInput.files[0]) {
+        formData.append("Foto", fotoInput.files[0]);
+      }
+
+      for (let key of ["Installatie","Hoofdgereedschap","Onderdeel","Type storing","Omschrijving","Actie","Monteur","Spoed"]) {
+        if (!formData.get(key)) {
+          alert("Vul alle velden in voordat je verzendt.");
+          return;
+        }
+      }
+
+      fetch("https://tdworkflow.app.n8n.cloud/webhook/storing-registratie", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Netwerkfout");
+        return response.text();
+      })
+      .then(() => {
+        alert("Melding ontvangen, bedankt voor de melding!");
+        location.reload();
+      })
+      .catch(error => {
+        console.error("Fout bij verzenden:", error);
+        alert("❌ Er ging iets mis bij het verzenden.");
+      });
+    }
+
+    const taal = localStorage.getItem("taal") || "nl";
+    if (taal === "en") vertaalEngels();
+
+    function vertaalEngels() {
+      document.getElementById("titel").textContent = "Malfunction registration form";
+      document.getElementById("label_datetime").childNodes[0].textContent = "Date & Time:";
+      document.getElementById("label_installatie").childNodes[0].textContent = "Installation:";
+      document.getElementById("label_hoofd").childNodes[0].textContent = "Main Tool:";
+      document.getElementById("label_onderdeel").childNodes[0].textContent = "Component:";
+      document.getElementById("verzendBtn").textContent = "Submit report";
+    }
+  </script>
+</body>
+</html>
